@@ -1,0 +1,19 @@
+Let's build an activity/notification stream! Include inline documentation.
+Your goal is to demonstrate (1) how you handle integrations with new systems and implementation of libraries, (2) to demonstrate your documentation, with a focus on identifying areas of strength and hesitancy within the code, and (3) to demonstrate you can handle full-stack, end-to-end.
+
+Requirements:
+1. It must be pretty and responsive - all browsers/viewports/devices.
+  1a. https://getstream.io/features/ has subjectively pretty UI.
+  1b. http://materializecss.com/ is a framework we've used.
+2. It must use Vue and have infinite scroll, rendering 20 entries per "page"
+  2a. https://peachscript.github.io/vue-infinite-loading/#!/installation looks like a good plugin for this; explore freely.
+3. It must pull data in from SCORM LRS on page load as well as click of a refresh button for ajax call of the data.
+  3a. For storing activity statements, use the free https://cloud.scorm.com LRS and associated endpoints (include the credentials to login in your submission)
+  3b. For managing API calls, use https://github.com/adlnet/xAPIWrapper
+4. For utility, create a button that will submit to the SCORM LRS a random statement (https://experienceapi.com/statements/).
+  4a. The button will randomly select an Actor name from this array: ["Morty","Summer","Jerry","Beth"] with a corresponding Actor email of {name}@playposit.com
+  4b. The button will randomly select a Verb based on an array of Verb objects you create using https://registry.tincanapi.com/#home/verbs
+  4c. Repeat random selection for an array of objects of each: Activity, Object, Extras, Context, and Result.
+
+Submission:
+Email your completed submission with response to hiring@playposit.com.
