@@ -9,6 +9,10 @@ Vue.material.registerTheme({
   default: {
     primary: 'red',
     accent: 'blue'
+  },
+  dark: {
+    primary: 'black',
+    accent: 'grey'
   }
 })
 

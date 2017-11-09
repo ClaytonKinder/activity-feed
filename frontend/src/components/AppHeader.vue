@@ -13,6 +13,7 @@ export default {
   methods: {
     refreshFeed () {
       console.log('Refreshing!');
+      this.$material.setCurrentTheme('dark')
     }
   }
 }
