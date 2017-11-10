@@ -40,7 +40,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '~styles/variables.scss';
   h2.md-title {
     flex: 1;
   }

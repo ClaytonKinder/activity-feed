@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <md-layout class="feed-container" md-gutter="16" v-infinite-scroll="getStatements" infinite-scroll-disabled="disableInfiniteScroll" infinite-scroll-distance="50" infinite-scroll-throttle-delay="1000">
       <md-layout class="feed-block" md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20" v-for="statement in statements" :key="statement">
-        <transition name="fade" appear>
+        <transition name="fade" appear enter-stagger="50">
           <feed-card :statement="statement"></feed-card>
         </transition>
       </md-layout>
