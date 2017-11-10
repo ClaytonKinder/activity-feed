@@ -1,0 +1,38 @@
+[
+  {
+    "instructor": {
+      "name": "Mr. Meeseeks",
+      "mbox": "mailto:MrMeeseeks@playposit.com"
+    }
+  },
+  {
+    "instructor": {
+      "name": "Armthony",
+      "mbox": "mailto:Armthony@playposit.com"
+    }
+  },
+  {
+    "instructor": {
+      "name": "Rick",
+      "mbox": "mailto:Rick@playposit.com"
+    }
+  },
+  {
+    "instructor": {
+      "name": "Bird Person",
+      "mbox": "mailto:BirdPerson@playposit.com"
+    }
+  },
+  {
+    "instructor": {
+      "name": "Gearhead",
+      "mbox": "mailto:Gearhead@playposit.com"
+    }
+  },
+  {
+    "instructor": {
+      "name": "Tammy",
+      "mbox": "mailto:Tammy@playposit.com"
+    }
+  }
+]

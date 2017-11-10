@@ -1,10 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueMaterial from 'vue-material'
+import VueResource from 'vue-resource'
 import 'vue-material/dist/vue-material.css'
 
-Vue.use(VueMaterial)
+ADL.XAPIWrapper.changeConfig({
+  "endpoint": process.env.XAPI_ENDPOINT,
+  "user": process.env.XAPI_USER,
+  "password": process.env.XAPI_PASSWORD,
+  "strictCallbacks": true
+});
 
+Vue.use(VueResource)
+Vue.use(VueMaterial)
 Vue.material.registerTheme({
   default: {
     primary: 'red',
@@ -12,7 +20,7 @@ Vue.material.registerTheme({
   },
   dark: {
     primary: 'black',
-    accent: 'grey'
+    accent: 'white'
   }
 })
 

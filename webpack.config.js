@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+require('dotenv').config({ path: 'variables.env' });
 
 module.exports = {
   entry: './frontend/src/main.js',
@@ -91,6 +92,23 @@ module.exports = {
       filename: 'index.html',
       template: 'index.html',
       inject: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+        XAPI_ENDPOINT: `'${process.env.XAPI_ENDPOINT}'`,
+        XAPI_USER: `'${process.env.XAPI_USER}'`,
+        XAPI_PASSWORD: `'${process.env.XAPI_PASSWORD}'`
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
     })
   ],
   resolve: {
@@ -111,26 +129,5 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  ])
+  devtool: (process.env.NODE_ENV === 'production') ? '#source-map' : '#eval-source-map'
 }

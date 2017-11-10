@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="$material.currentTheme">
     <app-header></app-header>
     <feed></feed>
   </div>
@@ -13,6 +13,11 @@ export default {
   components: {
     AppHeader,
     Feed
+  },
+  mounted () {
+    if (localStorage.getItem('theme')) {
+      this.$material.setCurrentTheme(localStorage.getItem('theme'));
+    }
   }
 }
 </script>
