@@ -1,62 +1,63 @@
 <template>
   <div class="page-wrapper">
-    <md-button class="md-fab md-primary md-mini md-clean" @click="logData" style="position: fixed; z-index: 9999999999999">
-      <md-icon>bug_report</md-icon>
-    </md-button>
-    <md-layout class="feed-container" md-gutter="16">
+    <md-layout class="feed-container" md-gutter="16" v-infinite-scroll="getStatements" infinite-scroll-disabled="disableInfiniteScroll" infinite-scroll-distance="50" infinite-scroll-throttle-delay="1000">
       <md-layout class="feed-block" md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20" v-for="statement in statements" :key="statement">
-        <feed-card :statement="statement"></feed-card>
+        <transition name="fade" appear>
+          <feed-card :statement="statement"></feed-card>
+        </transition>
       </md-layout>
-      <!-- <md-button class="md-fab add-button" @click="sendStatement">
-        <md-icon>add</md-icon>
-      </md-button> -->
       <md-speed-dial md-mode="scale" class="md-fab add-button">
         <md-button class="md-fab" md-fab-trigger>
           <md-icon md-icon-morph>close</md-icon>
-          <md-icon>share</md-icon>
+          <md-icon>settings</md-icon>
         </md-button>
         <md-button class="md-fab md-primary md-mini md-clean" @click="sendStatement">
           <md-icon>add</md-icon>
         </md-button>
-        <md-button class="md-fab md-primary md-mini md-clean">
+        <md-button class="md-fab md-primary md-mini md-clean" @click="refreshFeed">
           <md-icon>refresh</md-icon>
         </md-button>
       </md-speed-dial>
     </md-layout>
-    <infinite-loading @infinite="getStatements" ref="infiniteLoading" v-if="statements.length >= 20">
-      <span slot="spinner">
-        <img src="assets/spinner.gif">
-      </span>
-    </infinite-loading>
-    <div class="loading-screen" v-if="loading">
-      <!-- <img src="assets/spinner.gif"> -->
+    <div class="loading-block" v-if="loading && !noMoreStatements">
+      <img src="assets/spinner.gif">
     </div>
+    <md-snackbar class="error-snackbar" md-position="bottom center" ref="snackbar">
+      {{ (errorMessage) ? errorMessage : 'Oops! Something went wrong.' }}
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import _ from 'lodash';
 import StatementService from 'src/services/StatementService';
-import EventBus from 'src/buses/EventBus';
-import InfiniteLoading from 'vue-infinite-loading';
 import FeedCard from './FeedCard';
 
 export default {
   name: 'feed',
   components: {
-    InfiniteLoading,
     FeedCard
   },
   data () {
     return {
       loading: false,
-      initiallyLoaded: false,
+      noMoreStatements: false,
       moreUrl: null,
+      errorMessage: '',
       statements: []
     }
   },
+  computed: {
+    disableInfiniteScroll () {
+      return (this.loading || this.noMoreStatements)
+    }
+  },
   methods: {
-    containsObject (obj, arr) {
+    handleError(msg) {
+      this.errorMessage = msg;
+      this.$refs.snackbar.open();
+    },
+    containsStatement (obj, arr) {
+      // Check statement ID against existing statements to prevent duplicates
       var i;
       for (i = 0; i < arr.length; i++) {
           if (arr[i].id === obj.id) {
@@ -65,116 +66,65 @@ export default {
       }
       return false;
     },
-    // getStatements ($state) {
-    //   console.log(1);
-    //   _.debounce(($state) => {
-    //
-    //   }, 2000);
-    // },
-    getStatements: _.debounce(($state) => {
-      console.log(this);
-      if (!this.loading) {
+    getStatements($state) {
+      if (!this.noMoreStatements) {
         this.loading = true;
+        // Get statements from API
         StatementService.getStatements(this.moreUrl, (err, response, body) => {
           if (err) {
-            console.error(err);
+            this.handleError('Could not get statements at this time.');
           }
           else {
             this.moreUrl = body.more;
-            // this.statements.push(...body.statements);
+            // Check to make sure no duplicates are added
             body.statements.forEach((statement) => {
-              if (!this.containsObject(statement, this.statements)) {
+              if (!this.containsStatement(statement, this.statements)) {
                 this.statements.push(statement);
               }
             });
+            // If we've reached the end of the feed, disable infinite loading to prevent excessive API calls
             if (!this.moreUrl || this.moreUrl === '') {
-              $state.complete();
+              this.moreUrl = null;
+              this.noMoreStatements = true;
             }
           }
           this.loading = false;
-          this.initiallyLoaded = true;
-          if ($state) {
-            $state.loaded();
-          }
         })
       }
-      else {
-        if (!this.moreUrl && $state) {
-          $state.reset();
-        }
-      }
-    }, 2000),
-    // getStatements($state) {
-    //   console.log('Getting statements');
-    //   if (!this.loading) {
-    //     console.log(1);
-    //     this.loading = true;
-    //     StatementService.getStatements(this.moreUrl, (err, response, body) => {
-    //       if (err) {
-    //         console.error(err);
-    //       }
-    //       else {
-    //         console.log(2);
-    //         this.moreUrl = body.more;
-    //         // this.statements.push(...body.statements);
-    //         console.log(3);
-    //         body.statements.forEach((statement) => {
-    //           if (!this.containsObject(statement, this.statements)) {
-    //             this.statements.push(statement);
-    //           }
-    //         });
-    //         console.log(this.statements);
-    //         if (!this.moreUrl || this.moreUrl === '') {
-    //           $state.complete();
-    //         }
-    //       }
-    //       this.loading = false;
-    //       this.initiallyLoaded = true;
-    //       if ($state) {
-    //         $state.loaded();
-    //       }
-    //     })
-    //   }
-    //   else {
-    //     if (!this.moreUrl && $state) {
-    //       $state.reset();
-    //     }
-    //   }
-    // },
+    },
     sendStatement() {
       this.loading = true;
+      // Build statement using randomly selected JSON data
       StatementService.buildStatement()
         .then(response => {
+          // Add it to the API endpoint
           StatementService.sendStatement(response)
             .then(res => {
-              this.loading = false;
-              this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
               if (res.status === 200) {
-                this.getStatements();
+                // Attach it to the beginning of the array to avoid an unncessary API call to refresh the feed
+                if (!this.containsStatement(response, this.statements)) {
+                  this.statements.unshift(response);
+                }
               }
+              this.loading = false;
             })
             .catch(error => {
+              this.handleError('Could not send statement at this time.');
               this.loading = false;
             })
         })
         .catch(error => {
+          this.handleError('Could not build statement at this time.');
           this.loading = false;
         })
     },
-    logData () {
-      console.log(this.loading);
-    }
-  },
-  mounted () {
-    this.getStatements();
-    EventBus.$on('refreshFeed', () => {
+    refreshFeed () {
       this.statements = [];
       this.loading = false;
-      this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+      this.noMoreStatements = false;
       this.moreUrl = null;
-      console.log(1);
       this.getStatements();
-    });
+    }
   }
 }
 </script>
@@ -203,24 +153,22 @@ export default {
       .add-button {
         position: fixed;
         z-index: 1000;
-        bottom: 32px;
-        right: 24px;
+        bottom: 1.5rem;
+        right: 1.5rem;
       }
     }
 
-    .loading-screen {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100000000;
-      background-color: rgba(255,255,255,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      animation: fadeIn 0.2s linear;
+    .loading-block {
+      text-align: center;
+
+      img {
+        height: 4rem;
+        width: 4rem;
+      }
+    }
+
+    .error-snackbar {
+      text-align: center;
     }
   }
 

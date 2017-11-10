@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueMaterial from 'vue-material'
 import VueResource from 'vue-resource'
+import infiniteScroll from 'vue-infinite-scroll'
 import 'vue-material/dist/vue-material.css'
 
 ADL.XAPIWrapper.changeConfig({
@@ -12,6 +13,7 @@ ADL.XAPIWrapper.changeConfig({
 });
 
 Vue.use(VueResource)
+Vue.use(infiniteScroll)
 Vue.use(VueMaterial)
 Vue.material.registerTheme({
   default: {

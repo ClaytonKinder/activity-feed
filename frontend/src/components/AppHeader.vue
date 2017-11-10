@@ -1,9 +1,6 @@
 <template>
   <md-toolbar>
     <h2 class="md-title">Activity Feed</h2>
-    <md-button class="md-icon-button" @click="refreshFeed">
-      <md-icon>refresh</md-icon>
-    </md-button>
     <md-menu md-align-trigger md-size="4" md-direction="bottom left" ref="menu">
       <md-button class="md-icon-button" md-menu-trigger>
         <md-icon>more_vert</md-icon>
@@ -23,13 +20,9 @@
 </template>
 
 <script>
-import EventBus from 'src/buses/EventBus';
 export default {
   name: 'app-header',
   methods: {
-    refreshFeed () {
-      EventBus.$emit('refreshFeed');
-    },
     changeTheme (key) {
       if (key === 'default') {
         this.$material.setCurrentTheme('default');
