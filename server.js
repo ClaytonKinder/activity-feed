@@ -13,9 +13,9 @@ app.get('/',function(req,res){
 });
 
 // Redirect any other routes back to the index page
-app.get('*', function(req, res){
-  res.redirect('/');
-});
+// app.get('*', function(req, res){
+//   res.redirect('/');
+// });
 
 app.listen(process.env.PORT || 3000, function () {
   console.log("Express Started!");
