@@ -7,7 +7,6 @@ module.exports = {
   entry: './frontend/src/main.js',
   output: {
     path: path.resolve(__dirname, './frontend/dist'),
-    publicPath: '/frontend/dist/',
     filename: 'build.js'
   },
   module: {
@@ -71,7 +70,7 @@ module.exports = {
       },
       {
         test: /\.woff(\d*)\??(\d*)$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff" 
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
       },
       {
         test: /\.ttf\??(\d*)$/,
