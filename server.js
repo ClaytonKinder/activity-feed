@@ -5,9 +5,10 @@ var app=express();
 app.use('/frontend', express.static('frontend'))
 app.use('/data', express.static('frontend/data'))
 app.use('/assets', express.static('frontend/assets'))
+app.use('/', express.static('frontend/dist'))
 
 // Use index page as default route
-app.get('/',function(req,res){
+app.get('/',function(req,res) {
   res.sendFile(__dirname + '/index.html');
 });
 
