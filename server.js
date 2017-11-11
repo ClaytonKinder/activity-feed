@@ -8,7 +8,7 @@ app.use('/assets', express.static('frontend/assets'))
 
 // Use index page as default route
 app.get('/',function(req,res){
-  res.sendFile(__dirname + '/frontend/dist/index.html');
+  res.sendFile(__dirname + 'index.html');
 });
 
 // Redirect any other routes back to the index page
