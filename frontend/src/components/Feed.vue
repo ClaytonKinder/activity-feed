@@ -138,6 +138,13 @@ export default {
     }
   }
 
+  // IE bug fix
+  #app.ie {
+    .md-layout {
+      flex: 1 !important;
+    }
+  }
+
   .page-wrapper {
     padding: 2rem 2rem 4rem;
     position: relative;
@@ -178,6 +185,12 @@ export default {
       min-width: 50%;
       -ms-flex: 0 1 50%;
       flex: 0 1 50%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page-wrapper {
+      padding: 2rem 1rem 4rem;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="$material.currentTheme">
+  <div id="app" :class="computedClasses">
     <app-header></app-header>
     <feed></feed>
   </div>
@@ -14,6 +14,15 @@ export default {
     AppHeader,
     Feed
   },
+  computed: {
+    computedClasses () {
+      let classArray = [];
+      classArray.push(this.$material.currentTheme);
+      // The things we do for IE...
+      classArray.push((!!navigator.userAgent.match(/Trident/g) || !!navigator.userAgent.match(/MSIE/g)) ? 'ie' : '');
+      return classArray;
+    }
+  },
   mounted () {
     if (localStorage.getItem('theme')) {
       this.$material.setCurrentTheme(localStorage.getItem('theme'));
@@ -23,5 +32,8 @@ export default {
 </script>
 
 <style lang="scss">
-
+  // IE bug fix
+  .md-list .md-list-item-container {
+    height: 48px;
+  }
 </style>

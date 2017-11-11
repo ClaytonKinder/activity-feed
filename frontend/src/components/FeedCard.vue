@@ -34,6 +34,13 @@ export default {
     }
   }
 
+  // IE bug fix
+  #app.ie {
+    .feed-card {
+      display: block;
+    }
+  }
+
   .feed-card {
     .md-card-content {
       font-size: 1rem;

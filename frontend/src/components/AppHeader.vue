@@ -33,14 +33,24 @@ export default {
       }
     },
     verifyTheme (key) {
-      return (key === this.$material.currentTheme)
+      return (key === this.$material.currentTheme);
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  h2.md-title {
-    flex: 1;
+  // IE bug fix
+  #app.ie  {
+    .md-toolbar {
+      height: 64px;
+    }
   }
+
+  .md-toolbar {
+    .md-title {
+      flex: 1;
+    }
+  }
+
 </style>
