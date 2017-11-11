@@ -141,7 +141,7 @@ export default {
   // IE bug fix
   #app.ie {
     .md-layout {
-      flex: 1 !important;
+      flex: 0 1 !important;
     }
   }
 
