@@ -1,6 +1,12 @@
 <template>
   <md-toolbar>
-    <h2 class="md-title">Activity Feed</h2>
+    <h2 class="md-title md-hide-xsmall">Activity Feed</h2>
+    <h2 class="md-title md-hide-small-and-up">Feed</h2>
+    <md-input-container class="search">
+      <md-icon>search</md-icon>
+      <label></label>
+      <md-input v-model="searchTerm" type="text"></md-input>
+    </md-input-container>
     <md-menu md-align-trigger md-size="4" md-direction="bottom left" ref="menu">
       <md-button class="md-icon-button" md-menu-trigger>
         <md-icon>more_vert</md-icon>
@@ -20,8 +26,19 @@
 </template>
 
 <script>
+import { EventBus } from 'src/buses/EventBus.js';
 export default {
   name: 'app-header',
+  data () {
+    return {
+      searchTerm: ''
+    }
+  },
+  watch: {
+    searchTerm (val) {
+      EventBus.$emit('filterFeed', val);
+    }
+  },
   methods: {
     changeTheme (key) {
       if (key === 'default') {
@@ -50,6 +67,9 @@ export default {
   .md-toolbar {
     .md-title {
       flex: 1;
+    }
+    .search {
+      width: 200px;
     }
   }
 

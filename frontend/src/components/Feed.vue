@@ -1,7 +1,7 @@
 <template>
   <div class="page-wrapper">
     <md-layout class="feed-container" md-gutter="16" v-infinite-scroll="getStatements" infinite-scroll-disabled="disableInfiniteScroll" infinite-scroll-distance="50" infinite-scroll-throttle-delay="1000">
-      <md-layout class="feed-block" md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20" v-for="statement in statements" :key="statement">
+      <md-layout class="feed-block" md-flex-xsmall="100" md-flex-small="50" md-flex-medium="33" md-flex-large="25" md-flex-xlarge="20" v-for="statement in filteredFeed" :key="statement">
         <transition name="fade" appear enter-stagger="50">
           <feed-card :statement="statement"></feed-card>
         </transition>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { EventBus } from 'src/buses/EventBus.js';
 import StatementService from 'src/services/StatementService';
 import FeedCard from './FeedCard';
 
@@ -43,12 +44,18 @@ export default {
       noMoreStatements: false,
       moreUrl: null,
       errorMessage: '',
+      searchTerm: '',
       statements: []
     }
   },
   computed: {
     disableInfiniteScroll () {
       return (this.loading || this.noMoreStatements)
+    },
+    filteredFeed () {
+      return this.statements.filter((statement) => {
+        return statement.actor.name.includes(this.searchTerm);
+      });
     }
   },
   methods: {
@@ -125,6 +132,11 @@ export default {
       this.moreUrl = null;
       this.getStatements();
     }
+  },
+  mounted () {
+    EventBus.$on('filterFeed', (term) => {
+      this.searchTerm = term;
+    });
   }
 }
 </script>
