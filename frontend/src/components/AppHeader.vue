@@ -36,11 +36,13 @@ export default {
   },
   watch: {
     searchTerm (val) {
+      // Emit event to feed
       EventBus.$emit('filterFeed', val);
     }
   },
   methods: {
     changeTheme (key) {
+      // Set color theme and save in local storage
       if (key === 'default') {
         this.$material.setCurrentTheme('default');
         localStorage.setItem('theme', 'default');
@@ -50,6 +52,7 @@ export default {
       }
     },
     verifyTheme (key) {
+      // Which theme option is given the check mark in the dropdown menu?
       return (key === this.$material.currentTheme);
     }
   }

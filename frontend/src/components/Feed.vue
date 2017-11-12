@@ -134,6 +134,7 @@ export default {
     }
   },
   mounted () {
+    // Receive event from AppHeader
     EventBus.$on('filterFeed', (term) => {
       this.searchTerm = term;
     });
